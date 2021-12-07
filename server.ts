@@ -32,9 +32,11 @@ app.get("/pastes", async (req, res) => {
 });
 
 app.post("/paste", async (req, res) => {
-  const {title, body} = req.body;
-  const query = 'INSERT INTO pastes VALUES ($1, $2) RETURNING *'
-  const values = [title, body] 
+  console.log(req.body);
+  const { paste_title, paste_body } = req.body;
+  console.log(paste_title, paste_body)
+  const query = 'INSERT INTO pastes (paste_title, paste_body) VALUES ($1, $2) RETURNING *'
+  const values = [paste_title, paste_body] 
   const dbres = await client.query(query, values);
   res.json(dbres.rows);
 });
