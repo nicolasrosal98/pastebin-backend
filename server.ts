@@ -26,19 +26,32 @@ app.use(cors()) //add CORS support to each following route handler
 const client = new Client(dbConfig);
 client.connect();
 
+// GET / request
 app.get("/pastes", async (req, res) => {
-  const dbres = await client.query('select * from pastes');
-  res.json(dbres.rows);
+  const response = await client.query('select * from pastes') 
+  res.status(200).json({
+    status: "success",
+    data: response.rows
+  });
 });
 
+// POST / request
 app.post("/paste", async (req, res) => {
-  console.log(req.body);
   const { paste_title, paste_body } = req.body;
-  console.log(paste_title, paste_body)
   const query = 'INSERT INTO pastes (paste_title, paste_body) VALUES ($1, $2) RETURNING *'
   const values = [paste_title, paste_body] 
-  const dbres = await client.query(query, values);
-  res.json(dbres.rows);
+  const response = await client.query(query, values);
+  if (paste_body.length <= 0) {
+    res.status(400).json({
+      status: "failure",
+      data: "the body of a paste cannot be empty. Please provide a body"
+    })
+  } else {
+    res.status(200).json({
+      status: "success",
+      data: response
+    })
+  }
 });
 
 //Start the server on the given port
