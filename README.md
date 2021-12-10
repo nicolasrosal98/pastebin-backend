@@ -13,7 +13,7 @@ Sets env var LOCAL to true, running the app locally.
 
 ### Heroku
 
-`yarn start`
+`start:dev:heroku`
 
-The command in the `Procfile` is run.
+Runs server hosted on Heroku. 
 
